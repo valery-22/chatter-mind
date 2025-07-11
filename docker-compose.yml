@@ -1,0 +1,39 @@
+version: '3.9'
+
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    ports:
+      - "4000:4000"
+    depends_on:
+      - sentiment-api
+    volumes:
+      - ./server:/app
+    working_dir: /app
+    command: node src/server.js
+
+  sentiment-api:
+    build:
+      context: ./sentiment-api
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    working_dir: /app
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:4000/api/chat/message
+    volumes:
+      - ./client:/app
+    working_dir: /app
+    command: npm start
+
