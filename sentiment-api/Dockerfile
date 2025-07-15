@@ -2,12 +2,15 @@ FROM python:3.9-slim
 
 WORKDIR /app
 
+# Copy requirements first for better caching
 COPY ./requirements.txt .
-COPY ./sentiment_api ./sentiment_api
 
+# Install dependencies
 RUN pip install --no-cache-dir numpy==1.26.4 && \
     pip install --no-cache-dir -r requirements.txt
 
+# Copy the app code
+COPY ./sentiment_api ./sentiment_api
 
 EXPOSE 8000
 
