@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import {
   Box,
   Stack,
@@ -29,6 +30,7 @@ const sentimentConfig = {
 };
 
 export default function ChatWindow() {
+  const [sessionId] = useState(() => uuidv4());
   const [messages, setMessages] = useState([
     {
       sender: "bot",
@@ -47,7 +49,7 @@ export default function ChatWindow() {
     setInput('');
     setLoading(true);
     try {
-      const res = await axios.post(API_URL, { message: input, context });
+      const res = await axios.post(API_URL, { message: input, context, sessionId });
       setMessages(msgs => [
         ...msgs,
         userMsg,
